@@ -1,4 +1,6 @@
 <template>
+    <navBar/>
+<br> <br> <br>
     <div>
         {{ infos.Dname }}
         {{ infos.email }}
@@ -14,9 +16,12 @@
 import { mapGetters } from 'vuex';
 import { projectFirestore } from '../Firebase/config'; // Import the projectFirestore
 import { ref } from 'vue'; // Import ref from Vue
+import navBar from '../components/navBar.vue'
+
 
 export default {
   name: 'Profile',
+  components : {navBar},
   computed: {
     ...mapGetters(['User']),
   },

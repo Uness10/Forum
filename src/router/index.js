@@ -2,12 +2,18 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Import views
 import HomeView from '@/views/Home.vue';
-import Welcome from '@/views/Welcome.vue';
+import welcome from '@/views/Welcome.vue';
 import Profile from '@/views/Profile.vue';
 import Discussion from '@/views/Discussion.vue';
 import CreateDiscussion from '@/views/CreateDiscussion.vue'
 import Categories from '@/views/Categories.vue';
+import { projectAuth } from '../Firebase/config';
 const routes = [
+  {
+    path: '/',
+    name: 'welcome',
+    component: welcome,
+  },
   {
     path: '/Home',
     name: 'Home',

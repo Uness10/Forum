@@ -18,6 +18,7 @@ import SignupForm from '../components/SignupForm.vue'
 import LoginForm from '../components/LoginForm.vue'
 
 export default {
+  name : 'welcome',
   components: { SignupForm, LoginForm },
   data() {
     return {

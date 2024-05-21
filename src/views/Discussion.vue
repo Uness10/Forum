@@ -1,6 +1,8 @@
 <template>
   <div>
     <navBar />
+    <br> <br> <br>
+
     <div class="main-content">
       <DiscussionDetail :DisId="id" />
     </div>
