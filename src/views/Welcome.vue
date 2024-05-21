@@ -16,9 +16,6 @@
 <script>
 import SignupForm from '../components/SignupForm.vue'
 import LoginForm from '../components/LoginForm.vue'
-import {AddDiscussion } from '../composables/useFirestore.js'
-
-import { ref } from 'vue'
 
 export default {
   components: { SignupForm, LoginForm },

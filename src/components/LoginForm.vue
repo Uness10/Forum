@@ -1,37 +1,42 @@
 <template>
-    <div class="welcome container">
-        <form @submit.prevent="handleLogin">
-            <input type="email" required placeholder="Your email" v-model="email">
-            <input type="password" required placeholder="Your password" v-model="password">
-            <button>Login</button>
-            <div class="error">{{ error }}</div>
-        </form>
-    </div>
-  </template>
-  
-  <script setup>
-  import useLogin from '@/composables/useLogin';
- 
-import { ref } from 'vue';
+  <div class="welcome container">
+    <form @submit.prevent="handleLogin ">
+      <input type="email" required placeholder="Your email" v-model="email">
+      <input type="password" required placeholder="Your password" v-model="password">
+      <button >Login</button>
+      <div class="error">{{ error }}</div>
+    </form>
+  </div>
+</template>
 
-  
-  const email = ref('')
-  const password = ref('')
-  const {error, login} = useLogin()
+<script>
+import useLogin from '@/composables/useLogin';
+import { mapActions } from 'vuex';
 
-  const emit = defineEmits(['customEvent']);
-
-  const handleLogin = async () => {
-      const response = await login(email.value, password.value)
-      if(!error.value){
-        console.log("USER LOGGED SUCCESS")
-        emit('login')
-      }else {
-        console.log("USER NOT LOGGED")
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+      error: ''
+    };
+  },
+  methods: {
+    ...mapActions(['UpdateUserInfo']),
+    async handleLogin() {
+      const response = await useLogin(this.email, this.password);
+      
+      if (!this.error) {
+        console.log("USER LOGGED SUCCESS");
+        this.$emit('login');
+        this.UpdateUserInfo({'email':this.email,'passworld':this.password})
+      } else {
+        console.log("USER NOT LOGGED");
       }
-
+    }
   }
-  </script>
-  
+};
+</script>
+
 <style>
 </style>

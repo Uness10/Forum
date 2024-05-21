@@ -18,20 +18,16 @@ const routes = [
     name: 'Categories',
     component: Categories,
   },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    component: Welcome,
-  },
+  
   {
     path: '/profile',
-    name: 'profile',
-    component: ProfileView,
+    name: 'Profile',
+    component: Profile,
   },
   {
     path: '/Discussion/:id',
     name: 'DiscussionDetail',
-    component: Discussion
+    component: Discussion,
   },
   {
     path: '/CreateDiscussion',
