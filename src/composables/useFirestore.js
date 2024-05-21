@@ -3,41 +3,35 @@ import { ref } from 'vue'
 import { projectFirestore } from '../Firebase/config'
 
 
-async function AddDiscussion(content, title, userGmail) {
+async function AddDiscussion( title,content, userGmail,tags) {
   let newDoc = projectFirestore.collection("Discussions").doc();
   let disc = {
     "title": title,
     "content": content,
     "userEmail": userGmail,
-    "date": new Date().toISOString() 
+    "date": new Date().toISOString() ,
+    "tags":tags
   };
   newDoc.set(disc)
-    .then(() => {
-      console.log("Document written with ID: ", newDoc.id);
-    })
-    .catch((error) => {
-      console.error("Error adding document: ", error);
-      alert("Failed to add discussion: " + error.message);
-    });
+
 }
 
 
-async function AddResponse(disId, content, userGmail) {
-    let newRes = {
-      "userEmail": userGmail,
-      "content": content,
-      "discId": disId,
-      "date": new Date().toISOString() 
-    };
-    let newDoc = projectFirestore.collection("Responses").doc();
-    newDoc.set(newRes)
-      .then(() => {
-        console.log("Response added with ID: ", newDoc.id);
-      })
-      .catch((error) => {
-        console.error("Error adding response: ", error);
-        alert("Failed to add response: " + error.message);
-      });
+async function AddResponse(discId, content, userEmail) {
+  const response = {
+    userEmail: userEmail,
+    content: content,
+    discId: discId,
+    date: new Date().toISOString()
+  };
+
+  try {
+    await projectFirestore.collection('Responses').add(response);
+    console.log("Response added successfully");
+  } catch (error) {
+    console.error("Error adding response: ", error);
+    throw new Error("Failed to add response: " + error.message);
+  }
 }
 async function Disc_responses(discId) {
   try {
@@ -88,4 +82,21 @@ async function fetchDisId(desiredPostId) {
 }
 
 
-export {AddDiscussion,AddResponse,fetchDis,fetchDisId,Disc_responses}
+
+async function getAllTags() {
+  let tags = [];
+  try {
+    const snapshot = await projectFirestore.collection('Discussions').get();
+    snapshot.forEach(doc => {
+      const discussionTags = doc.data().tags;
+      tags = tags.concat(discussionTags);
+    });
+    // Get unique tags
+    tags = Array.from(new Set(tags));
+  } catch (error) {
+    console.error("Error fetching tags: ", error);
+  }
+  return tags;
+}
+
+export {AddDiscussion,AddResponse,fetchDis,fetchDisId,Disc_responses,getAllTags}

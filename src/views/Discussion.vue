@@ -12,6 +12,7 @@ import DiscussionDetail from '../components/DiscussionDetail.vue'
 import navBar from '../components/navBar.vue'
 
 export default {
+  name:'Discussion',
   components: { DiscussionDetail, navBar },
   computed: {
     id() {

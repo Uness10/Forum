@@ -12,7 +12,6 @@
 
 <script>
 
-import { doc, deleteDoc } from "firebase/firestore";
 
 
  
@@ -30,20 +29,6 @@ export default {
     goToDetail() {
 
       this.$router.push({ name: 'DiscussionDetail', params: { id: this.discussion.id } });
-
-    },
-
-    editDiscussion() {
-
-      this.$emit('edit', this.discussion);
-
-    },
-
-    async deleteDiscussion() {
-
-      await deleteDoc(doc(db, "discussions", this.discussion.id));
-
-      this.$emit('deleted', this.discussion.id);
 
     }
 

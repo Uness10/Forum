@@ -1,10 +1,6 @@
 <template>
   <form @submit.prevent="submitResponse">
     <div class="form-group">
-      <label for="userEmail">Your Email</label>
-      <input v-model="response.userEmail" type="email" id="userEmail" class="form-control" required />
-    </div>
-    <div class="form-group">
       <label for="responseContent">Response</label>
       <textarea v-model="response.content" id="responseContent" class="form-control" rows="3" required></textarea>
     </div>
@@ -13,7 +9,8 @@
 </template>
 
 <script>
-import { addResponse } from '../composables/useFirestore.js';
+import { AddResponse } from '../composables/useFirestore.js';
+import getUser from '../composables/getUser.js';
 
 export default {
   name: 'NewResponseForm',
@@ -28,13 +25,18 @@ export default {
       }
     }
   },
+  created() {
+    const { user } = getUser();
+    if (user.value) {
+      this.response.userEmail = user.value.email;
+    }
+  },
   methods: {
     async submitResponse() {
       try {
-        await addResponse(this.disId, this.response.content, this.response.userEmail);
+        await AddResponse(this.disId, this.response.content, this.response.userEmail);
         this.$emit('response-added');
-        this.response.userEmail = '';
-        this.response.content = '';
+        this.response.content = ''; // Clear content field after submission
       } catch (error) {
         console.error('Error adding response:', error);
         alert('Failed to add response: ' + error.message);
