@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="nav-container">
-      <router-link to="/Profile" class="nav-link" active-class="active-link">
+      <router-link to="/profile" class="nav-link" active-class="active-link">
         <i class="fas fa-user"></i> Profile
       </router-link>
 
@@ -14,7 +14,7 @@
       <router-link to="/CreateDiscussion" class="nav-link" active-class="active-link">
         <i class="fas fa-plus-circle"></i> Create Discussion
       </router-link>
-      <router-link to="/Logout" class="nav-link" active-class="active-link">
+      <router-link to="/welcome" @click="logout" class="nav-link" active-class="active-link">
         <i class="fas fa-sign-out-alt"></i> Logout
       </router-link>
     </div>
@@ -23,9 +23,22 @@
 </template>
 
 <script>
+import { projectAuth } from '../Firebase/config'; // Import Firebase Auth module
+
 export default {
   name: 'navBar',
-  props: {}
+  props: {},
+  methods: {
+    async logout() {
+    try {
+      await projectAuth.signOut(); // Sign out the current user
+      // Redirect the user to the welcome page after logout
+      this.$router.push('/welcome'); // Change to your desired route
+    } catch (error) {
+      console.error('Error logging out:', error.message);
+    }
+  }
+  },
 }
 </script>
 

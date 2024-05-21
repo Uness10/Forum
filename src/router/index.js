@@ -2,11 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Import views
 import HomeView from '@/views/Home.vue';
-import LoginView from '@/views/Login.vue';
 import Welcome from '@/views/Welcome.vue';
-import ProfileView from '@/views/Profile.vue';
-import DiscussionView from '@/views/Discussion.vue';
-
+import Profile from '@/views/Profile.vue';
+import Discussion from '@/views/Discussion.vue';
+import { projectAuth } from '../Firebase/config'; 
+import CreateDiscussion from '@/views/CreateDiscussion.vue'
+import Categories from '@/views/Categories.vue';
 
 
 const routes = [
@@ -14,44 +15,47 @@ const routes = [
     path: '/Home',
     name: 'Home',
     component: HomeView,
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: LoginView,
+
   },
   {
     path: '/welcome',
     name: 'welcome',
     component: Welcome,
+    
   },
   {
+    path: '/Categories',
+    name: 'Categories',
+    component: Categories,
+  },
+  ,
+  {
     path: '/profile',
-    name: 'profile',
-    component: ProfileView,
-    meta: { requiresAuth: true },
+    name: 'Profile',
+    component: Profile,
   },
   {
     path: '/Discussion/:id',
     name: 'DiscussionDetail',
-    component: DiscussionView
+    component: Discussion,
+  },
+  {
+    path: '/CreateDiscussion',
+    name: 'CreateDiscussion',
+    component: CreateDiscussion
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes,
+  routes
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  const isAuthenticated = !!localStorage.getItem('user');
-
-  if (requiresAuth && !isAuthenticated) {
-    next({ name: 'login' });
-  } else {
-    next();
-  }
+  console.log(from,to)
+  const currentUser = projectAuth.currentUser;
+  console.log(currentUser)
+  next();
 });
 
 export default router;
