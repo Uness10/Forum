@@ -1,96 +1,55 @@
 
-import {projectFirestore}  from '../Firebase/config.js'
-
-function AddDiscussion(){
-
+import { ref } from 'vue'
+import { projectFirestore } from '../Firebase/config'
 
 
-
-let newDoc = projectFirestore.collection("Discussions").doc();
-
-const id = newDoc.id;
-
-
-
-let  disc=
-
-      
-          {
-      
-            "id": 1,
-      
-            "title": "How to integrate Firebase with Vue?",
-      
-            "content": "I'm having trouble integrating Firebase with my Vue.js project. Can anyone provide some guidance?",
-      
-      
-            "userEmail": "123456@gmail.com",
-      
-            "responses": [
-      
-              {
-      
-                "id": 1,
-      
-                "userEmail": "123456@gmail.com",
-      
-                "content": "You can start by installing Firebase via npm and then initialize it in your main.js file.",
-      
-      
-              },
-      
-              {
-      
-                "id": 2,
-      
-                "userEmail": "123456@gmail.com",
-      
-                "content": "Check out the official Firebase documentation for detailed steps.",
-      
-      
-              }
-      
-            ]
-      
-        }
+async function AddDiscussion(content, title, userGmail) {
+  let newDoc = projectFirestore.collection("Discussions").doc();
+  let disc = {
+    "title": title,
+    "content": content,
+    "userEmail": userGmail,
+    "date": new Date().toISOString() 
+  };
+  newDoc.set(disc)
+    .then(() => {
+      console.log("Document written with ID: ", newDoc.id);
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+      alert("Failed to add discussion: " + error.message);
+    });
+}
 
 
-
-newDoc.set(disc)
-
-
-
+async function AddResponse(disId, content, userGmail) {
+    let newRes = {
+      "userEmail": userGmail,
+      "content": content,
+      "discId": disId,
+      "date": new Date().toISOString() 
+    };
+    let newDoc = projectFirestore.collection("Responses").doc();
+    newDoc.set(newRes)
       .then(() => {
-
-
-
-        console.log("Document written with ID: ", id);
-
-
-
-
-
-
+        console.log("Response added with ID: ", newDoc.id);
       })
-
-
-
       .catch((error) => {
-
-
-
-        console.error("Error adding document: ", error);
-
-
-
-        alert("Failed to add disc: " + error.message);
-
-
-
+        console.error("Error adding response: ", error);
+        alert("Failed to add response: " + error.message);
       });
-
-    }
-
+}
+async function Disc_responses(discId) {
+  try {
+    const r = await projectFirestore.collection('Responses').where("discId", "==", discId).get();
+    const responses = r.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    console.log(responses);
+    return responses;
+  } catch (error) {
+    console.error('Error fetching responses:', error);
+    throw new Error('Failed to fetch responses');
+  }
+}
 async function fetchDis() {
 
  
@@ -106,33 +65,27 @@ async function fetchDisId(desiredPostId) {
 
  
 
+    const disc = ref(null)
+    const error = ref(null)
     try {
+    let res = await projectFirestore.collection('Discussions').doc(desiredPostId).get()
 
-        const docRef = projectFirestore.collection('Articles').doc(desiredPostId);
-    
-        const docSnapshot = await docRef.get();
-    
-     
-    
-        if (docSnapshot.exists) {
-    
-          return docSnapshot.data();
-    
-          console.warn(`No article found with ID: ${desiredPostId}`);
-    
-          return null; // Or return a specific value to indicate no document found
-    
-        }
-    
-      } catch (error) {
-    
-        console.error('Error fetching article:', error);
-    
-        throw error; // Re-throw the error for further handling (optional)
-    
-      }
+    if (!res.exists) {
+      throw Error('That post does not exist')
+    }
+        disc.value = res.data()
+        console.log(disc.value)
+        return disc.value
+
+    }
+    catch(err) {
+        error.value = err.message
+        console.log(error.value);
+        return null;
+    }
     
      
 }
 
-export {AddDiscussion , fetchDis , fetchDisId}
+
+export {AddDiscussion,AddResponse,fetchDis,fetchDisId,Disc_responses}
