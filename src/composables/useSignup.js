@@ -1,46 +1,45 @@
-import { projectAuth } from "@/Firebase/config"
-import { ref } from "vue"
-import { projectFirestore } from '../Firebase/config'
+import { projectAuth } from "@/firebase/config";
+import { ref } from "vue";
+import { projectFirestore } from '../firebase/config';
 
-const error = ref(null)
+const error = ref(null);
 
-async function AddUserName(Name, email) {
-    let newDoc = projectFirestore.collection("User").doc();
-    let disc = {
-      "Dname": Name,
-      "email": email,
+async function AddUserName(id, Name, email) {
+    const newDoc = projectFirestore.collection("users").doc(id);
+    const disc = {
+
+          FullName: Name,
+          Email: email,
+
+
     };
-    newDoc.set(disc)
-      .then(() => {
-        console.log("Document written with ID to the user Collection: ", newDoc.id);
-      })
-      .catch((error) => {
-        console.error("Error adding document: ", error);
-        alert("Failed to add discussion: " + error.message);
-      });
-  }
 
-const signup = async (email, password, displayName) => {
-    error.value = null
     try {
-        const response = await projectAuth.createUserWithEmailAndPassword(email, password)
-
-        if(!response)
-            throw new Error('Could not signup')
-        
-
-        AddUserName(displayName, email)
-
-
-    } catch (err) {
-        console.log(err)
-        error.value = err.message
+        await newDoc.set(disc);
+        console.log("Document successfully written with ID:", id);
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        throw new Error("Failed to add user data: " + error.message);
     }
+}
 
+const signup = async (email, password, FullName,Birthdate) => {
+    error.value = null;
+    try {
+        const response = await projectAuth.createUserWithEmailAndPassword(email, password);
+        if (!response) {
+            throw new Error('Could not complete signup');
+        }
+        const userId = response.user.uid; // Get the user ID from the response
+        await AddUserName(userId, FullName, email,Birthdate);
+    } catch (err) {
+        console.error('Signup Error:', err.message);
+        error.value = err.message;
+    }
 }
 
 const useSignup = () => {
-    return {error, signup}
+    return { error, signup }
 }
 
-export default useSignup
+export default useSignup;

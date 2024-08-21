@@ -1,57 +1,37 @@
-import { createRouter, createWebHistory } from 'vue-router';
-
+import { createRouter, createWebHashHistory } from 'vue-router';
+import { projectAuth } from '../firebase/config';
 // Import views
 import HomeView from '@/views/Home.vue';
-import welcome from '@/views/Welcome.vue';
-import Profile from '@/views/Profile.vue';
-import Discussion from '@/views/Discussion.vue';
-import CreateDiscussion from '@/views/CreateDiscussion.vue'
-import Categories from '@/views/Categories.vue';
-import { projectAuth } from '../Firebase/config';
+import about from '@/views/about.vue';
+import products from '@/views/products.vue';
+
 const routes = [
   {
-    path: '/',
-    name: 'welcome',
-    component: welcome,
+    path: '/about',
+    name: 'about',
+    component: about,
   },
   {
-    path: '/Home',
+    path: '/',
     name: 'Home',
     component: HomeView,
   },
+
   {
-    path: '/Categories',
-    name: 'Categories',
-    component: Categories,
+    path: '/products',
+    name: 'products',
+    component: products,
   },
-  
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: Profile,
-  },
-  {
-    path: '/Discussion/:id',
-    name: 'DiscussionDetail',
-    component: Discussion,
-  },
-  {
-    path: '/CreateDiscussion',
-    name: 'CreateDiscussion',
-    component: CreateDiscussion
-  }
+
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
   routes
 });
 
-router.beforeEach((to, from, next) => {
-  console.log(from,to)
-  const currentUser = projectAuth.currentUser;
-  console.log(currentUser)
-  next();
-});
+
 
 export default router;
+
+

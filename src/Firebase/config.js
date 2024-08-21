@@ -7,17 +7,14 @@ import "firebase/auth";
 
 
 const firebaseConfig = {
-
-  apiKey: "AIzaSyAGyDrr2C3ABHLmrn57yRlVucXwZTbbD5k",
-  authDomain: "tp6forum.firebaseapp.com",
-  projectId: "tp6forum",
-  storageBucket: "tp6forum.appspot.com",
-
-  messagingSenderId: "166070398350",
-
-  appId: "1:166070398350:web:07f8988b905590d532c8df"
-
+  apiKey: "AIzaSyAyhp6ugFiPER9cKeqeMhV0_K0xSOHOvmg",
+  authDomain: "oakoffee-47eda.firebaseapp.com",
+  projectId: "oakoffee-47eda",
+  storageBucket: "oakoffee-47eda.appspot.com",
+  messagingSenderId: "526546867835",
+  appId: "1:526546867835:web:3f5c9d5eeaf6e121c274de"
 };
+
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);

@@ -1,6 +1,6 @@
 
 import { ref } from 'vue'
-import { projectFirestore } from '../Firebase/config'
+import { projectFirestore } from '../firebase/config'
 
 
 async function AddDiscussion( title,content, userGmail,tags) {
@@ -16,6 +16,15 @@ async function AddDiscussion( title,content, userGmail,tags) {
 
 }
 
+export const getUserData = async (userId) => {
+  try {
+    const querySnapshot = await projectFirestore.collection('users').doc(userId).get();
+    return querySnapshot.data();
+  } catch (e) {
+    console.error("Error getting documents: ", e);
+    return [];
+  }
+}
 
 async function AddResponse(discId, content, userEmail) {
   const response = {
